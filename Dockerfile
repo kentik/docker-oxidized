@@ -1,5 +1,6 @@
 FROM debian:stretch
 MAINTAINER Costas Drogos <costas.drogos@gmail.com>
+EXPOSE 8888
 
 ENV TZ=UTC
 ENV DEBIAN_FRONTEND=noninteractive
@@ -43,5 +44,8 @@ RUN	apt-get -yq autoremove --purge && \
 
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY files/docker-entrypoint.sh /usr/local/bin/
-RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh
-CMD ["/usr/local/bin/docker-entrypoint.sh"]
+COPY files/resolv.conf /etc/resolv.conf
+
+RUN ln -s usr/local/bin/docker-entrypoint.sh /docker-entrypoint.sh
+
+ENTRYPOINT "/usr/local/bin/docker-entrypoint.sh"
